@@ -150,7 +150,7 @@ sns.countplot(x = "label", data = X)
 st.pyplot(fig)
 
 fig = plt.figure(figsize=(10, 4))
-sns.scatterplot(X['temperature'], X['rainfall'])
+sns.scatterplot(x=X['temperature'], y=X['rainfall'])
 st.pyplot(fig)
 
 fig = plt.figure(figsize=(10, 4))
