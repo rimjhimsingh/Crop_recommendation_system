@@ -50,7 +50,7 @@ def get_dataset(name):
     data = None
     if name == 'crop_recommendation':
         
-        data = pd.read_csv("D:/rimjhim/SEMESTERS/Semester 6 (10th january 2022)/Foundations of Data science/Project/Intelligent_CropPrediction_System-main/Data-processed/crop_recommendation.csv")
+        data = pd.read_csv("crop_recommendation.csv")
         st.title("Crop Data")
         st.write(data)
         X = data
