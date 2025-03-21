@@ -4,35 +4,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
-from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
-
-from keras.callbacks import ModelCheckpoint
-from keras.models import Sequential
-from keras.layers import Dense, Activation, Flatten
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error 
-from matplotlib import pyplot as plt
-import seaborn as sb
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
-import warnings
-from keras.callbacks import History 
-
-from sklearn.linear_model import LinearRegression
-from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
+
 sc = StandardScaler()
 
 st.title('SmArtCrop: The Crop Recommendation System')
-st.success(""" Explore different classifier and datasets Compare the performace of each model """)
+st.success(""" Explore different classifier and datasets Compare the performance of each model """)
 
 dataset_name = st.sidebar.selectbox(
     'Select Dataset',
@@ -41,15 +24,13 @@ dataset_name = st.sidebar.selectbox(
 
 classifier_name = st.sidebar.selectbox(
     'Select classifier',
-    ('SVM', 'Random Forest', 'Naive Bayes','KNN')
+    ('SVM', 'Random Forest', 'Naive Bayes', 'KNN')
 )
 
-
-#displaying the dataset
+# Displaying the dataset
 def get_dataset(name):
     data = None
     if name == 'crop_recommendation':
-        #Change from absolute path to relative path
         data = pd.read_csv("crop_recommendation.csv")
         st.title("Crop Data")
         st.write(data)
@@ -67,7 +48,6 @@ st.latex(r''' F1 score = \frac{2*precision * recall}{precision + recall} ''')
 X, y = get_dataset(dataset_name)
 st.write('Shape of dataset:', X.shape)
 st.write('Number of classes:', len(np.unique(y)))
-
 
 
 def add_parameter_ui(clf_name):
@@ -88,7 +68,7 @@ def add_parameter_ui(clf_name):
     elif clf_name == 'Naive Bayes':
         params[''] = None
 
-    else: #random forest
+    else:  # Random Forest
         max_depth = st.sidebar.slider('max_depth', 2, 10)
         params['max_depth'] = max_depth
         n_estimators = st.sidebar.slider('n_estimators', 1, 200)
@@ -107,46 +87,41 @@ def get_classifier(clf_name, params):
         clf = KNeighborsClassifier(n_neighbors=params['K'])
 
     elif clf_name == 'Decision Tree': 
-        clf = DecisionTreeClassifier(max_depth = params['Depth'], random_state = 2)
-        st.write(Accuracy = "90.68181818181819")
+        clf = DecisionTreeClassifier(max_depth=params['Depth'], random_state=2)
+        st.write(Accuracy="90.68181818181819")
 
     elif clf_name == 'Naive Bayes':
-        NaiveBayes = GaussianNB()
         clf = GaussianNB()
 
-    #elif clf_name == 'Neural Network':
-      # clf= NeuralNetwork()
-    
     else:
-        clf = clf = RandomForestClassifier(n_estimators=params['n_estimators'], 
-            max_depth=params['max_depth'], random_state=2)
+        clf = RandomForestClassifier(n_estimators=params['n_estimators'], 
+                                     max_depth=params['max_depth'], random_state=2)
 
     return clf
 
 clf = get_classifier(classifier_name, params)
-#### CLASSIFICATION ####
 
-features = X[['N', 'P','K','temperature', 'humidity', 'ph', 'rainfall']]
+# CLASSIFICATION
+features = X[['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']]
 target = X['label']
-Xtrain, Xtest, Ytrain, Ytest = train_test_split(features,target,test_size = 0.2,random_state =2)
+Xtrain, Xtest, Ytrain, Ytest = train_test_split(features, target, test_size=0.2, random_state=2)
 clf.fit(Xtrain, Ytrain)
 y_pred = clf.predict(Xtest)
 
-#print accuracy score
+# Accuracy score
 acc = accuracy_score(Ytest, y_pred)
 
 st.write(f'Classifier = {classifier_name}')
 st.write(f'Accuracy =', acc)
 
 
-
-#### PLOT DATASET ####
+# PLOT DATASET
 fig = plt.figure()
 sns.lineplot(x=X['temperature'], y=X['rainfall'])
 st.pyplot(fig)
 
 fig = plt.figure(figsize=(10, 4))
-sns.countplot(x = "label", data = X)
+sns.countplot(x="label", data=X)
 st.pyplot(fig)
 
 fig = plt.figure(figsize=(10, 4))
@@ -154,17 +129,15 @@ sns.scatterplot(x=X['temperature'], y=X['rainfall'])
 st.pyplot(fig)
 
 fig = plt.figure(figsize=(10, 4))
-sns.distplot( X['ph'])
+sns.distplot(X['ph'])
 st.pyplot(fig)
 
-#fig = plt.figure(figsize=(10, 10))
-#sns.pairplot(X)
-#st.pyplot(fig)
-
+# Ensuring correlation matrix only uses numeric columns
+X_numeric = X.select_dtypes(include=[np.number])  # Only numeric columns
 fig = plt.figure(figsize=(10, 4))
-sns.heatmap(X.corr(),annot=True)
+sns.heatmap(X_numeric.corr(), annot=True)
 st.pyplot(fig)
 
-chart_data = pd.DataFrame(np.random.randn(20, 3), columns=['Temprature', 'humidity', 'ph'])
+chart_data = pd.DataFrame(np.random.randn(20, 3), columns=['Temperature', 'humidity', 'ph'])
 st.area_chart(chart_data)
 st.bar_chart(chart_data)
