@@ -26,7 +26,7 @@ st.title('SmArtCrop: The Crop Recommendation System')
 
 st.success(""" Neural Network Implementation """)
 
-data = pd.read_csv("D:/rimjhim/SEMESTERS/Semester 6 (10th january 2022)/Foundations of Data science/Project/apy1.csv")
+data = pd.read_csv("crop_recommendation.csv")
 st.title("Crop Data")
 st.write(data)
 
