@@ -49,7 +49,7 @@ classifier_name = st.sidebar.selectbox(
 def get_dataset(name):
     data = None
     if name == 'crop_recommendation':
-        
+        #Change from absolute path to relative path
         data = pd.read_csv("crop_recommendation.csv")
         st.title("Crop Data")
         st.write(data)
@@ -142,7 +142,7 @@ st.write(f'Accuracy =', acc)
 
 #### PLOT DATASET ####
 fig = plt.figure()
-sns.lineplot( X['temperature'], X['rainfall'])
+sns.lineplot(x=X['temperature'], y=X['rainfall'])
 st.pyplot(fig)
 
 fig = plt.figure(figsize=(10, 4))
